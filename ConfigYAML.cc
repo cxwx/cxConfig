@@ -20,8 +20,9 @@ ConfigYAML::ConfigYAML(const string& filename) {
     theVerbose = theConfig["verbose"].as<int>();
   }
 
-  if (theVerbose > 0)
+  if (theVerbose > 0) {
     cout << theConfig;
+  }
 }
 
 }  // namespace cxfunc::config

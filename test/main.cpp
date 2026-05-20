@@ -20,10 +20,14 @@ static void check(bool cond, const string& msg) {
   cout << "  PASS: " << msg << endl;
 }
 
-static const string HOME = string(getenv("HOME"));
-static const string YAML_PATH = HOME + "/software/config/git/test/config.yaml";
-static const string JSON_PATH = HOME + "/software/config/git/test/config.json";
-static const string TOML_PATH = HOME + "/software/config/git/test/config.toml";
+#ifndef CXCONFIG_TEST_DIR
+#define CXCONFIG_TEST_DIR "."
+#endif
+
+static const string TEST_DIR = CXCONFIG_TEST_DIR;
+static const string YAML_PATH = TEST_DIR + "/config.yaml";
+static const string JSON_PATH = TEST_DIR + "/config.json";
+static const string TOML_PATH = TEST_DIR + "/config.toml";
 
 // ==================== ConfigYAML tests ====================
 

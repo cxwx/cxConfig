@@ -12,7 +12,7 @@ ConfigRapidYml::ConfigRapidYml(const string& filename) {
   if (!file) {
     throw runtime_error("Failed to open file: " + filename);
   }
-  size_t size = file.tellg();
+  auto size = static_cast<streamsize>(file.tellg());
   buffer.resize(size + 1, '\0');
   file.seekg(0);
   file.read(buffer.data(), size);

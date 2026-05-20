@@ -20,8 +20,9 @@ ConfigJson::ConfigJson(const string& filename) {
     theVerbose = theConfig["verbose"].get<int>();
   }
 
-  if (theVerbose > 0)
+  if (theVerbose > 0) {
     cout << theConfig.dump(2) << '\n';
+  }
 }
 
 }  // namespace cxfunc::config
