@@ -1,0 +1,45 @@
+#ifndef CONFIGYAML_T_HH__
+#define CONFIGYAML_T_HH__
+
+#ifdef HAVE_YAML
+
+#include <yaml-cpp/yaml.h>
+#include <string>
+#include "ConfigBase.hh"
+
+namespace cxfunc::config {
+
+class ConfigYAML : public ConfigBase {
+ private:
+  YAML::Node theConfig;
+
+ public:
+  [[nodiscard]] YAML::Node Config() const { return theConfig; }
+
+  template <typename T>
+  YAML::Node operator[](const T& key) const {
+    return theConfig[key];
+  }
+
+  template <typename T>
+  YAML::Node operator()(const YAML::Node& node, const T& key) {
+    return node[key];
+  }
+
+  template <typename T, typename... Args>
+  YAML::Node operator()(const YAML::Node& node, const T& key, Args... args) {
+    return operator()(node[key], args...);
+  }
+
+  template <typename... Args>
+  YAML::Node operator()(Args... args) {
+    return operator()(theConfig, args...);
+  }
+
+  explicit ConfigYAML(const std::string& filename = std::string(std::getenv("HOME")) + "/rc/cxDefault.yml");
+};
+
+}  // namespace cxfunc::config
+
+#endif  // HAVE_YAML
+#endif  // CONFIGYAML_T_HH__
