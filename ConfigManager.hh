@@ -1,9 +1,9 @@
 #ifndef CONFIGMANAGER_HH__
 #define CONFIGMANAGER_HH__
 
+#include "ConfigBase.hh"
 #include <string>
 #include <unordered_map>
-#include "ConfigBase.hh"
 
 namespace cxfunc::config {
 
@@ -25,13 +25,13 @@ class ConfigManager {
   }
 
   template <typename T>
-  [[nodiscard]] T* GetAs(const std::string& name) const {
+  [[nodiscard]] auto GetAs(const std::string& name) const -> T* {
     return dynamic_cast<T*>(Get(name));
   }
 
-  [[nodiscard]] size_t Size() const { return theConfigs.size(); }
-  [[nodiscard]] bool Has(const std::string& name) const {
-    return theConfigs.count(name) > 0;
+  [[nodiscard]] auto Size() const -> size_t { return theConfigs.size(); }
+  [[nodiscard]] auto Has(const std::string& name) const -> bool {
+    return theConfigs.contains(name);
   }
 };
 

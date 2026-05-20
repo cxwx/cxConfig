@@ -11,14 +11,14 @@ class ConfigBase {
   std::string theFilename;
 
  public:
-  [[nodiscard]] int Verbose() const { return theVerbose; }
-  [[nodiscard]] const std::string& Filename() const { return theFilename; }
+  [[nodiscard]] auto Verbose() const -> int { return theVerbose; }
+  [[nodiscard]] auto Filename() const -> const std::string& { return theFilename; }
   virtual ~ConfigBase() = default;
 
   ConfigBase(const ConfigBase&) = delete;
-  ConfigBase& operator=(const ConfigBase&) = delete;
+  auto operator=(const ConfigBase&) -> ConfigBase& = delete;
   ConfigBase(ConfigBase&&) = delete;
-  ConfigBase& operator=(ConfigBase&&) = delete;
+  auto operator=(ConfigBase&&) -> ConfigBase& = delete;
 
  protected:
   ConfigBase() = default;

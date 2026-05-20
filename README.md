@@ -1,4 +1,4 @@
-# cxconfig
+# `cxconfig`
 
 C++17 多格式配置文件解析库。统一抽象层，支持 YAML、JSON、TOML、RYML 四种后端。
 
