@@ -1,8 +1,6 @@
 #ifndef CONFIGYAML_T_HH__
 #define CONFIGYAML_T_HH__
 
-#ifdef HAVE_YAML
-
 #include <yaml-cpp/yaml.h>
 #include <string>
 #include "ConfigBase.hh"
@@ -41,5 +39,4 @@ class ConfigYAML : public ConfigBase {
 
 }  // namespace cxfunc::config
 
-#endif  // HAVE_YAML
 #endif  // CONFIGYAML_T_HH__

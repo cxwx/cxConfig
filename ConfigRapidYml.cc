@@ -1,7 +1,6 @@
 #include "ConfigRapidYml.hh"
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
 
 using namespace std;
 
@@ -9,9 +8,9 @@ namespace cxfunc::config {
 
 ConfigRapidYml::ConfigRapidYml(const string& filename) {
   theFilename = filename;
-  std::ifstream file(filename, std::ios::ate | std::ios::binary);
+  ifstream file(filename, ios::ate | ios::binary);
   if (!file) {
-    throw std::runtime_error("Failed to open file: " + filename);
+    throw runtime_error("Failed to open file: " + filename);
   }
   size_t size = file.tellg();
   buffer.resize(size + 1, '\0');
@@ -20,13 +19,13 @@ ConfigRapidYml::ConfigRapidYml(const string& filename) {
   theTree = ryml::parse_in_place(ryml::to_substr(buffer.data()));
   theConfig = theTree.rootref();
 
-  if (!theConfig.has_child("global")) {
-    throw std::runtime_error("Config file missing 'global' section: " + filename);
-  }
-  ryml::ConstNodeRef global = theConfig["global"];
-
-  if (global.has_child("verbose")) {
-    global["verbose"] >> theVerbose;
+  if (theConfig.has_child("global")) {
+    ryml::ConstNodeRef global = theConfig["global"];
+    if (global.has_child("verbose")) {
+      global["verbose"] >> theVerbose;
+    }
+  } else if (theConfig.has_child("verbose")) {
+    theConfig["verbose"] >> theVerbose;
   }
 
   if (theVerbose > 0) {

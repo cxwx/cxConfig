@@ -1,4 +1,5 @@
 #include "ConfigTomlpp.hh"
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -7,6 +8,10 @@ namespace cxfunc::config {
 
 ConfigTomlpp::ConfigTomlpp(const string& filename) {
   theFilename = filename;
+  ifstream file(filename);
+  if (!file) {
+    throw runtime_error("Failed to open file: " + filename);
+  }
   theTree = toml::parse_file(filename);
 
   if (theTree["global"] && theTree["global"].is_table()) {

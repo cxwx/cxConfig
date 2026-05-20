@@ -185,19 +185,11 @@ int main() {
   cout << "--- JSON ---" << endl;
   test_json();
 
-#if HAVE_TOML
   cout << "--- TOML ---" << endl;
   test_toml();
-#else
-  cout << "--- TOML: skipped (disabled) ---" << endl;
-#endif
 
-#if HAVE_RYML
   cout << "--- RYML ---" << endl;
   test_ryml();
-#else
-  cout << "--- RYML: skipped (disabled) ---" << endl;
-#endif
 
   cout << "--- Manager ---" << endl;
   test_manager();

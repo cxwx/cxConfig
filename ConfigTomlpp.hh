@@ -1,8 +1,6 @@
 #ifndef CONFIGTOMLPP_T_HH__
 #define CONFIGTOMLPP_T_HH__
 
-#ifdef HAVE_TOML
-
 #include <string>
 #include <toml++/toml.h>
 #include "ConfigBase.hh"
@@ -37,5 +35,5 @@ class ConfigTomlpp : public ConfigBase {
 };
 
 }  // namespace cxfunc::config
+
 #endif  // CONFIGTOMLPP_T_HH__
-#endif  // HAVE_TOML

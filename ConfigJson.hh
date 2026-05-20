@@ -1,8 +1,6 @@
 #ifndef CONFIGJSON_T_HH__
 #define CONFIGJSON_T_HH__
 
-#ifdef HAVE_JSON
-
 #include <nlohmann/json.hpp>
 #include <string>
 #include "ConfigBase.hh"
@@ -40,4 +38,3 @@ class ConfigJson : public ConfigBase {
 }  // namespace cxfunc::config
 
 #endif  // CONFIGJSON_T_HH__
-#endif  // HAVE_JSON

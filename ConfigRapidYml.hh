@@ -1,8 +1,6 @@
 #ifndef CONFIGRAPIDYML_T_HH__
 #define CONFIGRAPIDYML_T_HH__
 
-#ifdef HAVE_RYML
-
 #include <ryml.hpp>
 #include <string>
 #include "ConfigBase.hh"
@@ -43,5 +41,5 @@ class ConfigRapidYml : public ConfigBase {
 };
 
 }  // namespace cxfunc::config
+
 #endif  // CONFIGRAPIDYML_T_HH__
-#endif  // HAVE_RYML
