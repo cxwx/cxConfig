@@ -22,17 +22,17 @@ class ConfigJson : public ConfigBase {
   const nlohmann::json& operator[](const std::string& key) const { return theConfig[key]; }
 
   template <typename T>
-  nlohmann::json& operator()(nlohmann::json& node, const T& key) const {
+  const nlohmann::json& operator()(const nlohmann::json& node, const T& key) const {
     return node[key];
   }
 
   template <typename T, typename... Args>
-  nlohmann::json& operator()(nlohmann::json& node, const T& key, Args... args) const {
+  const nlohmann::json& operator()(const nlohmann::json& node, const T& key, Args... args) const {
     return operator()(node[key], args...);
   }
 
   template <typename... Args>
-  nlohmann::json& operator()(Args... args) const {
+  const nlohmann::json& operator()(Args... args) const {
     return operator()(theConfig, args...);
   }
 };
