@@ -17,7 +17,7 @@ class ConfigRapidYml : public ConfigBase {
 
  public:
   [[nodiscard]] auto Config() const -> ryml::ConstNodeRef { return theConfig; }
-  [[nodiscard]] auto Tree() const -> ryml::Tree { return theTree; }
+  [[nodiscard]] auto Tree() const -> const ryml::Tree& { return theTree; }
 
   template <typename T>
   auto operator[](const T& key) const -> ryml::ConstNodeRef {

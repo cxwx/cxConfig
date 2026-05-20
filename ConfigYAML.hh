@@ -14,7 +14,7 @@ class ConfigYAML : public ConfigBase {
   YAML::Node theConfig;
 
  public:
-  [[nodiscard]] YAML::Node Config() const { return theConfig; }
+  [[nodiscard]] const YAML::Node& Config() const { return theConfig; }
 
   template <typename T>
   YAML::Node operator[](const T& key) const {
