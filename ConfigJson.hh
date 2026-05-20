@@ -16,24 +16,23 @@ class ConfigJson : public ConfigBase {
  public:
   explicit ConfigJson(const std::string& filename = std::string(std::getenv("HOME")) + "/rc/cxDefault.json");
 
-  [[nodiscard]] nlohmann::json& Config() { return theConfig; }
   [[nodiscard]] const nlohmann::json& Config() const { return theConfig; }
 
   nlohmann::json& operator[](const std::string& key) { return theConfig[key]; }
   const nlohmann::json& operator[](const std::string& key) const { return theConfig[key]; }
 
   template <typename T>
-  nlohmann::json& operator()(nlohmann::json& node, const T& key) {
+  nlohmann::json& operator()(nlohmann::json& node, const T& key) const {
     return node[key];
   }
 
   template <typename T, typename... Args>
-  nlohmann::json& operator()(nlohmann::json& node, const T& key, Args... args) {
+  nlohmann::json& operator()(nlohmann::json& node, const T& key, Args... args) const {
     return operator()(node[key], args...);
   }
 
   template <typename... Args>
-  nlohmann::json& operator()(Args... args) {
+  nlohmann::json& operator()(Args... args) const {
     return operator()(theConfig, args...);
   }
 };

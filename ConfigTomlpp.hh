@@ -18,21 +18,6 @@ class ConfigTomlpp : public ConfigBase {
 
   auto operator[](const std::string& key) const -> toml::node_view<const toml::node> { return theTree[key]; }
 
-  auto operator()(const std::string& key) const -> toml::node_view<const toml::node> { return theTree[key]; }
-
-  template <typename T, typename... Args>
-  auto operator()(const T& key, Args... args) const -> toml::node_view<const toml::node> {
-    if constexpr (sizeof...(args) == 0) {
-      return theTree[key];
-    } else {
-      auto child = theTree[key];
-      if (child.is_table()) {
-        return (*child.as_table())(args...);
-      }
-      return child;
-    }
-  }
-
   explicit ConfigTomlpp(const std::string& filename = std::string(std::getenv("HOME")) + "/rc/cxDefault.toml");
 };
 

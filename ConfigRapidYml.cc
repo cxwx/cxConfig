@@ -1,7 +1,7 @@
 #include "ConfigRapidYml.hh"
-#include <exception>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -21,8 +21,7 @@ ConfigRapidYml::ConfigRapidYml(const string& filename) {
   theConfig = theTree.rootref();
 
   if (!theConfig.has_child("global")) {
-    cerr << "Config file should has a global child!\n";
-    std::terminate();
+    throw std::runtime_error("Config file missing 'global' section: " + filename);
   }
   ryml::ConstNodeRef global = theConfig["global"];
 

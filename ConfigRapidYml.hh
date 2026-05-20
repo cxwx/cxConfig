@@ -25,17 +25,17 @@ class ConfigRapidYml : public ConfigBase {
   }
 
   template <typename T>
-  auto operator()(const ryml::ConstNodeRef& node, const T& key) -> ryml::ConstNodeRef {
+  auto operator()(const ryml::ConstNodeRef& node, const T& key) const -> ryml::ConstNodeRef {
     return node[key];
   }
 
   template <typename T, typename... Args>
-  auto operator()(const ryml::ConstNodeRef& node, const T& key, Args... args) -> ryml::ConstNodeRef {
+  auto operator()(const ryml::ConstNodeRef& node, const T& key, Args... args) const -> ryml::ConstNodeRef {
     return operator()(node[key], args...);
   }
 
   template <typename... Args>
-  auto operator()(Args... args) -> ryml::ConstNodeRef {
+  auto operator()(Args... args) const -> ryml::ConstNodeRef {
     return operator()(theConfig, args...);
   }
 

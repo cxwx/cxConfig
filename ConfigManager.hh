@@ -3,7 +3,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <stdexcept>
 #include "ConfigBase.hh"
 
 namespace cxfunc::config {

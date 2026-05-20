@@ -103,6 +103,41 @@ static void test_ryml_basic() {
   cout << "  ConfigRapidYml all tests passed" << endl;
 }
 
+// ==================== ConfigTomlpp tests ====================
+
+static void test_toml_basic() {
+  string path = string(getenv("HOME")) + "/software/config/git/test/config.toml";
+  ConfigTomlpp cfg(path);
+
+  check(cfg.Verbose() == 2, "toml Verbose == 2");
+  check(cfg["app"]["name"].value_or("") == std::string("toml_test"), "toml app.name");
+  check(cfg["app"]["version"].value_or(0) == 2, "toml app.version");
+  check(cfg["database"]["host"].value_or("") == std::string("toml-host"), "toml db host");
+  check(cfg["database"]["pool"]["size"].value_or(0) == 5, "toml db pool size");
+  check(cfg.Tree()["app"]["name"].value_or("") == std::string("toml_test"), "toml Tree() access");
+  check(cfg["database"]["pool"]["size"].value_or(0) == 5, "toml [] chain db.pool.size");
+  check(cfg["database"]["pool"]["timeout"].value_or(0) == 15, "toml [] chain db.pool.timeout");
+  check(cfg["database"]["pool"]["tags"]["main"].value_or(false) == true, "toml [] chain db.pool.tags.main");
+  check(cfg["app"].is_table(), "toml [] single key returns table node_view");
+  check(cfg["count"].value_or(0) == 42, "toml int conversion");
+  check(cfg["pi"].value_or(0.0) > 3.14, "toml float conversion");
+  check(cfg["enabled"].value_or(false) == true, "toml bool conversion");
+  check(cfg["empty_str"].value_or("default") == std::string(""), "toml empty string");
+  check(cfg["mode"].value_or("") == std::string("test"), "toml string conversion");
+  check(cfg["nonexistent"].value_or(-1) == -1, "toml missing key default");
+  check(cfg["database"]["nonexistent"].value_or(99) == 99, "toml missing nested key default");
+  check(cfg["app"]["missing_field"].value_or(0) == 0, "toml missing int default");
+  auto seedNode = cfg["seed"];
+  check(seedNode.is_array(), "toml seed is array");
+  auto seedArr = seedNode.as_array();
+  check(seedArr->size() == 3, "toml seed array size == 3");
+
+  // base class
+  check(cfg.Filename() == path, "toml Filename()");
+
+  cout << "  ConfigTomlpp all tests passed" << endl;
+}
+
 // ==================== ConfigManager tests ====================
 
 static void test_manager() {
@@ -147,38 +182,7 @@ int main() {
 
 #if HAVE_TOML
   cout << "--- TOML ---" << endl;
-  {
-    string path = string(getenv("HOME")) + "/software/config/git/test/config.toml";
-    ConfigTomlpp cfg(path);
-
-    check(cfg.Verbose() == 2, "toml Verbose == 2");
-    check(cfg["app"]["name"].value_or("") == std::string("toml_test"), "toml app.name");
-    check(cfg["app"]["version"].value_or(0) == 2, "toml app.version");
-    check(cfg["database"]["host"].value_or("") == std::string("toml-host"), "toml db host");
-    check(cfg["database"]["pool"]["size"].value_or(0) == 5, "toml db pool size");
-    check(cfg.Tree()["app"]["name"].value_or("") == std::string("toml_test"), "toml Tree() access");
-    check(cfg["database"]["pool"]["size"].value_or(0) == 5, "toml [] chain db.pool.size");
-    check(cfg["database"]["pool"]["timeout"].value_or(0) == 15, "toml [] chain db.pool.timeout");
-    check(cfg["database"]["pool"]["tags"]["main"].value_or(false) == true, "toml [] chain db.pool.tags.main");
-    check(cfg("app").is_table(), "toml () single key returns table node_view");
-    check(cfg["count"].value_or(0) == 42, "toml int conversion");
-    check(cfg["pi"].value_or(0.0) > 3.14, "toml float conversion");
-    check(cfg["enabled"].value_or(false) == true, "toml bool conversion");
-    check(cfg["empty_str"].value_or("default") == std::string(""), "toml empty string");
-    check(cfg["mode"].value_or("") == std::string("test"), "toml string conversion");
-    check(cfg["nonexistent"].value_or(-1) == -1, "toml missing key default");
-    check(cfg["database"]["nonexistent"].value_or(99) == 99, "toml missing nested key default");
-    check(cfg["app"]["missing_field"].value_or(0) == 0, "toml missing int default");
-    auto seedNode = cfg["seed"];
-    check(seedNode.is_array(), "toml seed is array");
-    auto seedArr = seedNode.as_array();
-    check(seedArr->size() == 3, "toml seed array size == 3");
-
-    // base class
-    check(cfg.Filename() == path, "toml Filename()");
-
-    cout << "  ConfigTomlpp all tests passed" << endl;
-  }
+  test_toml_basic();
 #else
   cout << "--- TOML: skipped (disabled) ---" << endl;
 #endif
