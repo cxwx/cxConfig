@@ -36,36 +36,26 @@ set(DICT_HEADERS
     ConfigYAML.hh
 )
 
-find_package(
-    ROOT
-    REQUIRED
-    COMPONENTS
-        Core
-        RIO
-        Net
-        Hist
-        Graf
-        Graf3d
-        Gpad
-        Tree
-        Rint
-        Postscript
-        Matrix
-        Physics
-        MathCore
-        Thread
-        dl
-        Minuit
-        TreePlayer
-        FITSIO
-)
+find_package(ROOT QUIET)
 
-include(${ROOT_USE_FILE})
-add_definitions(${ROOT_CXX_FLAGS})
+if(ROOT_FOUND)
+    message(STATUS "ROOT found, enabling dictionary generation.")
+    include(${ROOT_USE_FILE})
+    add_definitions(${ROOT_CXX_FLAGS})
+    root_generate_dictionary(G__cxconfig ${DICT_HEADERS} LINKDEF LinkDef.h)
+endif()
 
-root_generate_dictionary(G__cxconfig ${DICT_HEADERS} LINKDEF LinkDef.h)
-
-add_library(cxconfig SHARED ${CXCONFIG_SRCS} ${DICT_HEADERS} G__cxconfig.cxx)
+if(ROOT_FOUND)
+    add_library(
+        cxconfig
+        SHARED
+        ${CXCONFIG_SRCS}
+        ${DICT_HEADERS}
+        G__cxconfig.cxx
+    )
+else()
+    add_library(cxconfig SHARED ${CXCONFIG_SRCS} ${DICT_HEADERS})
+endif()
 set_target_properties(
     cxconfig
     PROPERTIES CXX_VISIBILITY_PRESET default POSITION_INDEPENDENT_CODE ON
@@ -84,8 +74,11 @@ target_include_directories(
 )
 target_link_libraries(
     cxconfig
-    PUBLIC yaml-cpp::yaml-cpp nlohmann_json::nlohmann_json ryml::ryml
-    ${ROOT_LIBRARIES}
+    PUBLIC
+        yaml-cpp::yaml-cpp
+        nlohmann_json::nlohmann_json
+        ryml::ryml
+        ${ROOT_LIBRARIES}
 )
 
 # === test ===
@@ -125,8 +118,9 @@ install(
     NAMESPACE cxconfig::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cxconfig
 )
-install(FILES
-    ${CMAKE_BINARY_DIR}/libcxconfig_rdict.pcm 
-    ${CMAKE_BINARY_DIR}/libcxconfig.rootmap
-    DESTINATION lib/)
-
+install(
+    FILES
+        ${CMAKE_BINARY_DIR}/libcxconfig_rdict.pcm
+        ${CMAKE_BINARY_DIR}/libcxconfig.rootmap
+    DESTINATION lib/
+)
