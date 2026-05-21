@@ -76,3 +76,8 @@ mgr.Register("yaml", &yaml);
 mgr.Register("json", &json);
 auto* typed = mgr.GetAs<ConfigYAML>("yaml");
 ```
+
+## 致谢
+* qwen3.6:35b -> ollama(local)
+* claude-cli
+* mimo-v2.5-pro
