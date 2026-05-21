@@ -118,9 +118,11 @@ install(
     NAMESPACE cxconfig::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cxconfig
 )
-install(
-    FILES
-        ${CMAKE_BINARY_DIR}/libcxconfig_rdict.pcm
-        ${CMAKE_BINARY_DIR}/libcxconfig.rootmap
-    DESTINATION lib/
-)
+if(ROOT_FOUND)
+    install(
+        FILES
+            ${CMAKE_BINARY_DIR}/libcxconfig_rdict.pcm
+            ${CMAKE_BINARY_DIR}/libcxconfig.rootmap
+        DESTINATION lib/
+    )
+endif()
