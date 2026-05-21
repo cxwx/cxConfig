@@ -43,19 +43,15 @@ if(ROOT_FOUND)
     include(${ROOT_USE_FILE})
     add_definitions(${ROOT_CXX_FLAGS})
     root_generate_dictionary(G__cxconfig ${DICT_HEADERS} LINKDEF LinkDef.h)
+    set(CXCONFIG_SRCS ConfigYAML.cc ConfigJson.cc ConfigTomlpp.cc ConfigRapidYml.cc G__cxconfig.cxx)
+    set(ROOT_DEPS ${ROOT_LIBRARIES})
+else()
+    message(STATUS "ROOT not found, building without dictionary support.")
+    set(CXCONFIG_SRCS ConfigYAML.cc ConfigJson.cc ConfigTomlpp.cc ConfigRapidYml.cc)
+    set(ROOT_DEPS "")
 endif()
 
-if(ROOT_FOUND)
-    add_library(
-        cxconfig
-        SHARED
-        ${CXCONFIG_SRCS}
-        ${DICT_HEADERS}
-        G__cxconfig.cxx
-    )
-else()
-    add_library(cxconfig SHARED ${CXCONFIG_SRCS} ${DICT_HEADERS})
-endif()
+add_library(cxconfig SHARED ${CXCONFIG_SRCS} ${DICT_HEADERS})
 set_target_properties(
     cxconfig
     PROPERTIES CXX_VISIBILITY_PRESET default POSITION_INDEPENDENT_CODE ON
@@ -78,7 +74,7 @@ target_link_libraries(
         yaml-cpp::yaml-cpp
         nlohmann_json::nlohmann_json
         ryml::ryml
-        ${ROOT_LIBRARIES}
+        ${ROOT_DEPS}
 )
 
 # === test ===

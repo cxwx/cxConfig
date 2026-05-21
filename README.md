@@ -1,5 +1,7 @@
 # `cxconfig`
 
+[![CI](https://github.com/cxwx/cxConfig/actions/workflows/ci.yml/badge.svg)](https://github.com/cxwx/cxConfig/actions/workflows/ci.yml)
+
 C++17 多格式配置文件解析库。统一抽象层，支持 YAML、JSON、TOML、RYML 四种后端。
 
 ## 设计原则
@@ -46,6 +48,8 @@ cmake --install .
 ```bash
 brew install yaml-cpp nlohmann-json tomlplusplus rapidyaml
 ```
+
+> ROOT 为可选依赖，用于生成 C++ 字典（ROOT 宏交互）。不安装 ROOT 仍可正常构建和使用库的核心功能。
 
 ## 使用
 
