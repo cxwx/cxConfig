@@ -12,7 +12,9 @@ ConfigJson::ConfigJson(const string& filename) {
   if (!file) {
     throw runtime_error("Failed to open file: " + filename);
   }
-  file >> theConfig;
+  // file >> theConfig;  // no comments
+  theConfig = nlohmann::json::parse(file, nullptr, true, true);
+
 
   if (theConfig["global"]["verbose"].is_number_integer()) {
     theVerbose = theConfig["global"]["verbose"].get<int>();

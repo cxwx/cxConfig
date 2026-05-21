@@ -27,7 +27,45 @@ find_package(ryml REQUIRED)
 # === sources ===
 set(CXCONFIG_SRCS ConfigYAML.cc ConfigJson.cc ConfigTomlpp.cc ConfigRapidYml.cc)
 
-add_library(cxconfig SHARED ${CXCONFIG_SRCS})
+set(DICT_HEADERS
+    ConfigBase.hh
+    ConfigManager.hh
+    ConfigTomlpp.hh
+    ConfigJson.hh
+    ConfigRapidYml.hh
+    ConfigYAML.hh
+)
+
+find_package(
+    ROOT
+    REQUIRED
+    COMPONENTS
+        Core
+        RIO
+        Net
+        Hist
+        Graf
+        Graf3d
+        Gpad
+        Tree
+        Rint
+        Postscript
+        Matrix
+        Physics
+        MathCore
+        Thread
+        dl
+        Minuit
+        TreePlayer
+        FITSIO
+)
+
+include(${ROOT_USE_FILE})
+add_definitions(${ROOT_CXX_FLAGS})
+
+root_generate_dictionary(G__cxconfig ${DICT_HEADERS} LINKDEF LinkDef.h)
+
+add_library(cxconfig SHARED ${CXCONFIG_SRCS} ${DICT_HEADERS} G__cxconfig.cxx)
 set_target_properties(
     cxconfig
     PROPERTIES CXX_VISIBILITY_PRESET default POSITION_INDEPENDENT_CODE ON
@@ -47,6 +85,7 @@ target_include_directories(
 target_link_libraries(
     cxconfig
     PUBLIC yaml-cpp::yaml-cpp nlohmann_json::nlohmann_json ryml::ryml
+    ${ROOT_LIBRARIES}
 )
 
 # === test ===
@@ -86,3 +125,8 @@ install(
     NAMESPACE cxconfig::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cxconfig
 )
+install(FILES
+    ${CMAKE_BINARY_DIR}/libcxconfig_rdict.pcm 
+    ${CMAKE_BINARY_DIR}/libcxconfig.rootmap
+    DESTINATION lib/)
+
