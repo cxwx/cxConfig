@@ -8,65 +8,24 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { name: "Without ROOT", root: "off" }
-          - { name: "With ROOT", root: "on" }
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install system dependencies
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake libyaml-cpp-dev libnlohmann-json-dev rapidyaml-dev
+          brew install yaml-cpp nlohmann-json tomlplusplus rapidyaml
 
-      - name: Install toml++ (header-only, CMake FetchContent)
-        run: |
-          mkdir -p _thirdparty && cd _thirdparty
-          cat > CMakeLists.txt << 'EOF'
-          cmake_minimum_required(VERSION 3.14)
-          project(tomlpp_none)
-          include(FetchContent)
-          FetchContent_Declare(tomlplusplus URL https://github.com/marzer/tomlplusplus/archive/refs/tags/v3.4.0.tar.gz)
-          FetchContent_MakeAvailable(tomlplusplus)
-          EOF
-          mkdir build && cd build
-          cmake ..
-          sudo make install -j
-
-      - name: Install ROOT (optional)
-        if: matrix.config.root == 'on'
-        run: |
-          sudo apt-get install -y root-core root-minuit root-tree root-geom root-graf root-rio root-net
-
-      - name: Configure (without ROOT)
-        if: matrix.config.root == 'off'
+      - name: Configure
         run: |
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release \
                    -DCXCONFIG_BUILD_TEST=ON \
                    -DCMAKE_DISABLE_FIND_PACKAGE_ROOT=ON
-          cmake --build . -j$(nproc)
+          cmake --build . -j$(sysctl -n hw.ncpu)
 
-      - name: Run tests (without ROOT)
-        if: matrix.config.root == 'off'
-        working-directory: build
-        run: ctest --output-on-failure
-
-      - name: Configure (with ROOT)
-        if: matrix.config.root == 'on'
-        run: |
-          mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release \
-                   -DCXCONFIG_BUILD_TEST=ON
-          cmake --build . -j$(nproc)
-
-      - name: Run tests (with ROOT)
-        if: matrix.config.root == 'on'
+      - name: Run tests
         working-directory: build
         run: ctest --output-on-failure
